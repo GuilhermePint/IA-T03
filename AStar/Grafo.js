@@ -173,15 +173,19 @@ class Grafo {
 
       if (verticeAtual === destino) {
         // Reconstruir o caminho
+
         const caminho = [];
+
         let vertice = destino;
 
         while (pai[vertice - 1] !== null) {
           caminho.unshift(vertice);
           vertice = pai[vertice - 1];
+          console.log(caminho)
         }
 
         caminho.unshift(origem);
+
         return caminho;
       }
 
@@ -201,6 +205,7 @@ class Grafo {
           }
         }
       }
+
     }
 
     // Caminho não encontrado
