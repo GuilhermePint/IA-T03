@@ -6,8 +6,7 @@ A modelagem desse problema é criada por meio de grafos. Cada vértice represent
 Considerando a abordagem de programação orientada a objetos, a modelagem aconteceu por meio da divisão entre classes e funções de acordo com a natureza do gráfico proposto. <br> 
 No total, há 5 classes: Aresta.js, Capitais.js, Grafo.js, Vertice.js e Main.js. Fazem parte da modelagem do problema as classes Aresta.js, Grafo.js e Vertice.js.
 >A classe Aresta possui parâmetros de vértice 1, vértice 2, peso e rótulo. 
-<details>
-    <summary>Classe Aresta</summary>
+
 
 ~~~  
 class Aresta {
@@ -44,12 +43,11 @@ class Aresta {
  }
 }
 ~~~
-</details>
+
 
 >A classe Vértice, por sua vez, possui os parâmetros rótulos, índice, vértices vizinhos e distâncias.
 
-<details>
-<summary>Classe Vértice</summary>
+
 
 ~~~
 class Vertice {
@@ -121,12 +119,9 @@ class Vertice {
     }
 }
 ~~~
-</details>
+
 
 >A classe Grafo possui como parâmetros o número de vértices, arestas e quais são as suas respectivas listas. Nesta mesma classe, temos as funções getVertice(), adicionarAresta(), adicionarArestaComRotulo() e imprimirGrafo().
-
-<details>
-<summary> Classe Grafo </summary>
 
 ~~~
 class Grafo {
@@ -215,9 +210,124 @@ class Grafo {
 }
 }
 ~~~
-</details>
 
 ## Implementação do Algoritmo A*
 ### De acordo com o pseudo código proposto:
 ![Alt text](image.png)
 
+### Definimos a seguinte heurística para o Algoritmo A*
+
+
+~~~
+heuristica(verticeAtual, verticeDestino) {    
+  return verticeAtual.getDistancias()[verticeDestino.getIndice() - 1];
+  }
+~~~
+>Levamos em conta o custo dos caminhos para obter o caminho com menor custo.
+
+### Segue o resto do algoritmo
+
+~~~
+// Função que implementa o algoritmo A* em um grafo
+aStar(grafo, origem, destino) {
+    // Inicializa arrays para armazenar distâncias, pais, fScore e gScore
+    const dist = new Array(this.getNumVertices()).fill(Number.MAX_SAFE_INTEGER);
+    const pai = new Array(this.getNumVertices()).fill(null);
+    const fScore = new Array(this.getNumVertices()).fill(Number.MAX_SAFE_INTEGER);
+    const gScore = new Array(this.getNumVertices()).fill(Number.MAX_SAFE_INTEGER);
+
+    // Conjunto para rastrear vértices a serem explorados
+    const openSet = new Set();
+
+    // Inicializa o gScore para o vértice de origem como 0
+    gScore[origem - 1] = 0;
+
+    // Inicializa o fScore usando uma heurística para o vértice de origem
+    fScore[origem - 1] = this.heuristica(this.getVertice(origem), this.getVertice(destino));
+
+    // Adiciona o vértice de origem ao conjunto de vértices a serem explorados
+    openSet.add(origem);
+
+    // Loop principal enquanto há vértices para explorar
+    while (openSet.size > 0) {
+        // Encontra o vértice atual com menor fScore
+        const verticeAtual = Array.from(openSet).reduce((a, b) => (fScore[a - 1] < fScore[b - 1] ? a : b));
+
+        // Verifica se o vértice atual é o destino e reconstrói o caminho
+        if (verticeAtual === destino) {
+            const caminho = [];
+            let vertice = destino;
+
+            // Reconstrói o caminho percorrendo os pais
+            while (pai[vertice - 1] !== null) {
+                caminho.unshift(vertice);
+                vertice = pai[vertice - 1];
+            }
+
+            // Adiciona o vértice de origem ao caminho
+            caminho.unshift(origem);
+            return caminho;
+        }
+
+        // Remove o vértice atual do conjunto de vértices a serem explorados
+        openSet.delete(verticeAtual);
+
+        // Loop pelos vértices vizinhos do vértice atual
+        for (const verticeVizinho of this.getVertice(verticeAtual).verticesVizinhos) {
+            // Calcula a tentativa de gScore para o vértice vizinho
+            const tentativaGScore = gScore[verticeAtual - 1] + grafo[verticeAtual - 1][verticeVizinho.getIndice() - 1];
+
+            // Verifica se a tentativa de gScore é menor que o valor atual de gScore
+            if (tentativaGScore < gScore[verticeVizinho.getIndice() - 1]) {
+                // Atualiza o pai, gScore e fScore para o vértice vizinho
+                pai[verticeVizinho.getIndice() - 1] = verticeAtual;
+                gScore[verticeVizinho.getIndice() - 1] = tentativaGScore;
+                fScore[verticeVizinho.getIndice() - 1] =
+                    gScore[verticeVizinho.getIndice() - 1] + this.heuristica(verticeVizinho, this.getVertice(destino));
+
+                // Adiciona o vértice vizinho ao conjunto de vértices a serem explorados, se ainda não estiver presente
+                if (!openSet.has(verticeVizinho.getIndice())) {
+                    openSet.add(verticeVizinho.getIndice());
+                }
+            }
+        }
+    }
+
+    // Caminho não encontrado, retorna nulo
+    return null;
+}
+~~~
+
+## Casos de Teste, Complexidade do Algoritmo e Discussão
+
+### Casos de Teste
+
+#### Caso de teste 1: 
+Considere um grafo simples com 5 vértices e arestas conectando todos os vértices de forma sequencial (1-2, 2-3, 3-4, 4-5). O peso de cada aresta é igual à diferença entre os vértices que ela conecta. Nesse caso, o caminho mais curto de 1 a 5 seria a sequência direta de 1 a 5.
+
+#### Caso de teste 2: 
+Considere um grafo com 5 vértices onde o vértice 1 está conectado a todos os outros vértices e os outros vértices estão conectados em uma sequência (2-3, 3-4, 4-5). O peso de cada aresta é igual à diferença entre os vértices que ela conecta, exceto para as arestas conectando o vértice 1, que têm peso 10. Nesse caso, o caminho mais curto de 1 a 5 seria a aresta direta de 1 a 5, apesar do seu peso maior.
+
+### Complexidade do Algoritmo
+Vamos assumir que **b** é o fator de ramificação médio do grafo (número médio de vértices sucessores) e **d** é a profundidade da solução no espaço de busca.
+
+No pior caso, onde todos os caminhos precisam ser explorados, a heurística não fornece uma vantagem significativa, e a complexidade de tempo pode se aproximar da busca de custo uniforme. Nesse caso, a complexidade de tempo seria <strong><em>O(b^d)</em></strong>.
+
+No melhor caso, onde a heurística é altamente informativa e guia o algoritmo diretamente para a solução, a complexidade de tempo pode ser significativamente menor.
+
+A heurística apresentada, que retorna o peso da aresta entre os vértices, pode ser boa para grafos onde os pesos das arestas são representativos da "distância" entre os vértices. Se for assim, a heurística pode proporcionar uma estimativa eficiente do custo restante para o destino.
+
+Em resumo, a eficácia do <strong>A*</strong> com essa heurística dependerá fortemente das características específicas do grafo e da qualidade da heurística. 
+
+Em casos ideais, onde a heurística é boa, a complexidade de tempo pode ser significativamente menor do que 
+O(b^d). No entanto, em casos menos ideais, onde a heurística não fornece uma vantagem substancial, a complexidade de tempo pode se aproximar de <strong><em>O(b^d)</em></strong>.
+
+### Discussão
+
+O algoritmo A* é um algoritmo de busca informada que usa uma heurística para estimar o custo do caminho da origem ao destino. A eficácia do algoritmo depende fortemente da qualidade da heurística. Se a heurística for capaz de fornecer uma boa estimativa do custo restante para o destino, o algoritmo A* pode encontrar o caminho mais curto de maneira eficiente.
+
+No entanto, se a heurística não fornece uma boa estimativa, o algoritmo A* pode acabar explorando muitos caminhos desnecessários, resultando em uma eficiência semelhante à busca de custo uniforme. Além disso, a heurística deve ser admissível, ou seja, nunca deve superestimar o custo para alcançar o objetivo. Se a heurística não for admissível, o algoritmo A* pode não encontrar o caminho mais curto.
+
+Além disso, o algoritmo A* tem uma complexidade de espaço de O(b^d), o que significa que ele pode consumir uma quantidade significativa de memória para problemas grandes ou para grafos com um grande fator de ramificação. Isso pode ser um problema para aplicações em tempo real ou para dispositivos com recursos limitados.
+
+Em resumo, o algoritmo A* é uma ferramenta poderosa para encontrar o caminho mais curto em um grafo, mas sua eficácia e eficiência dependem fortemente da qualidade da heurística e das características específicas do grafo. Portanto, é importante escolher ou projetar uma heurística adequada ao problema específico que se está tentando resolver.
