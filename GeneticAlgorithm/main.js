@@ -1,13 +1,12 @@
 // main.js
 
-const { simulatedAnnealing } = require('./SimulatedAnnealing');
 const { AlgoritmoGenetico } = require('./algoritmoGenetico');
 const { forcaBruta } = require('./forcabruta');
 const { Item, Mochila } = require('./mochila');
 
 // Exemplo de utilização:
 
-const mochila = new Mochila(100); // Capacidade da mochila
+const mochila = new Mochila(10); // Capacidade da mochila
 
 //i <- quantidade de itens
 for (let i = 1; i <= 3; i++) {

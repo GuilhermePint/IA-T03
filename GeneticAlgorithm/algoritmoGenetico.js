@@ -39,13 +39,11 @@ class AlgoritmoGenetico {
             }
         }
 
-        //console.log(cromossomo, pesoTotal)
-
         // Penalizar soluções que ultrapassam a capacidade da mochila
         const capacidadeExcedida = pesoTotal - this.mochila.capacidade;
+        const penalidade = capacidadeExcedida > 0 ? 1000 : 0; // Ajuste o valor da penalidade conforme necessário
 
-
-        const fitness = valorTotal - capacidadeExcedida;
+        const fitness = valorTotal - penalidade;
 
         return fitness;
     }
@@ -105,26 +103,11 @@ class AlgoritmoGenetico {
             this.evoluir();
         }
 
-        // Filtra a população para incluir apenas soluções válidas
-        const populacaoValida = this.populacao.filter(cromossomo => {
-            let pesoTotal = 0;
-            for (let i = 0; i < cromossomo.length; i++) {
-                if (cromossomo[i] === 1) {
-                    pesoTotal += this.mochila.itens[i].peso;
-                }
-                if (pesoTotal > this.mochila.capacidade) {
-                    return false; // Interrompe o loop se a capacidade for excedida
-                }
-            }
+        // Ordena a população pelo valor em ordem decrescente
+        this.populacao.sort((a, b) => this.calcularFitness(b) - this.calcularFitness(a));
 
-            return true;
-        });
-
-        // Ordena a população válida pelo valor em ordem decrescente
-        populacaoValida.sort((a, b) => this.calcularFitness(b) - this.calcularFitness(a));
-
-        // Retorna o melhor cromossomo da população válida
-        return populacaoValida[0];
+        // Retorna o melhor cromossomo da população
+        return this.populacao[0];
     }
 }
 
