@@ -6,9 +6,9 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-HUMAN = -1
+HUMANO = -1
 COMP = +1
-let board = [
+let tabuleiro = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
     [' ', ' ', ' ']
@@ -16,44 +16,44 @@ let board = [
 
 let currentPlayer = 'X';
 
-function printBoard() {
+function imprimirTabuleiro() {
     for (let i = 0; i < 3; i++) {
-        console.log(board[i].join(' | '));
+        console.log(tabuleiro[i].join(' | '));
         if (i < 2) {
             console.log('---------');
         }
     }
 }
 
-function checkWinner() {
+function checarVencedor() {
     // Check rows
     for (let i = 0; i < 3; i++) {
-        if (board[i][0] !== ' ' && board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
+        if (tabuleiro[i][0] !== ' ' && tabuleiro[i][0] === tabuleiro[i][1] && tabuleiro[i][1] === tabuleiro[i][2]) {
             return true;
         }
     }
 
     for (let j = 0; j < 3; j++) {
-        if (board[0][j] !== ' ' && board[0][j] === board[1][j] && board[1][j] === board[2][j]) {
+        if (tabuleiro[0][j] !== ' ' && tabuleiro[0][j] === tabuleiro[1][j] && tabuleiro[1][j] === tabuleiro[2][j]) {
             return true;
         }
     }
 
-    if (board[0][0] !== ' ' && board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
+    if (tabuleiro[0][0] !== ' ' && tabuleiro[0][0] === tabuleiro[1][1] && tabuleiro[1][1] === tabuleiro[2][2]) {
         return true;
     }
 
-    if (board[0][2] !== ' ' && board[0][2] === board[1][1] && board[1][1] === board[2][0]) {
+    if (tabuleiro[0][2] !== ' ' && tabuleiro[0][2] === tabuleiro[1][1] && tabuleiro[1][1] === tabuleiro[2][0]) {
         return true;
     }
 
     return false;
 }
 
-function isBoardFull() {
+function isTabuleiroCheio() {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (board[i][j] === ' ') {
+            if (tabuleiro[i][j] === ' ') {
                 return false;
             }
         }
@@ -61,50 +61,50 @@ function isBoardFull() {
     return true;
 }
 
-function switchPlayer() {
+function trocarJogador() {
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
 }
 
-function playHuman() {
-    printBoard();
+function jogadaHumano() {
+    imprimirTabuleiro();
 
-    rl.question(`Player ${currentPlayer}, enter your move (1-9): `, (input) => {
+    rl.question(`\nJogador ${currentPlayer}, digite sua jogada (1-9): `, (input) => {
         const move = parseInt(input, 10);
 
         if (move >= 1 && move <= 9) {
             const row = Math.floor((move - 1) / 3);
             const col = (move - 1) % 3;
 
-            if (board[row][col] === ' ') {
-                board[row][col] = currentPlayer;
+            if (tabuleiro[row][col] === ' ') {
+                tabuleiro[row][col] = currentPlayer;
 
-                if (checkWinner()) {
-                    printBoard();
-                    console.log(`Player ${currentPlayer} wins!`);
+                if (checarVencedor()) {
+                    imprimirTabuleiro();
+                    console.log(`Jogador ${currentPlayer} ganha!`);
                     rl.close();
-                } else if (isBoardFull()) {
-                    printBoard();
-                    console.log('It\'s a tie!');
+                } else if (isTabuleiroCheio()) {
+                    imprimirTabuleiro();
+                    console.log('É um empate!');
                     rl.close();
                 } else {
-                    switchPlayer();
-                    playMachine();
+                    trocarJogador();
+                    jogadaMaquina();
                 }
             } else {
-                console.log('Invalid move. The cell is already taken. Please try again.');
-                playHuman();
+                console.log('Jogada inválida. Esse espaço já está ocupado. Tente de novo.');
+                jogadaHumano();
             }
         } else {
-            console.log('Invalid move. Please enter a number between 1 and 9.');
-            playHuman();
+            console.log('Jogada inválida. Porvafor digite um número de 1 a 9.');
+            jogadaHumano();
         }
     });
 }
 
-function minimax(board, depth, player, alpha, beta) {
-    if (checkWinner()) {
+function minimax(tabuleiro, profundidade, player, alpha, beta) {
+    if (checarVencedor()) {
         return player === COMP ? -1 : 1;
-    } else if (isBoardFull()) {
+    } else if (isTabuleiroCheio()) {
         return 0;
     }
 
@@ -112,12 +112,12 @@ function minimax(board, depth, player, alpha, beta) {
         let maxEval = -Infinity;
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                if (board[i][j] === ' ') {
-                    board[i][j] = 'O';
-                    let eval = minimax(board, depth + 1, HUMAN, alpha, beta);
-                    board[i][j] = ' ';
-                    maxEval = Math.max(maxEval, eval);
-                    alpha = Math.max(alpha, eval);
+                if (tabuleiro[i][j] === ' ') {
+                    tabuleiro[i][j] = 'O';
+                    let aval = minimax(tabuleiro, profundidade + 1, HUMANO, alpha, beta);
+                    tabuleiro[i][j] = ' ';
+                    maxEval = Math.max(maxEval, aval);
+                    alpha = Math.max(alpha, aval);
                     if (beta <= alpha) {
                         break;
                     }
@@ -129,12 +129,12 @@ function minimax(board, depth, player, alpha, beta) {
         let minEval = Infinity;
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                if (board[i][j] === ' ') {
-                    board[i][j] = 'X';
-                    let eval = minimax(board, depth + 1, COMP, alpha, beta);
-                    board[i][j] = ' ';
-                    minEval = Math.min(minEval, eval);
-                    beta = Math.min(beta, eval);
+                if (tabuleiro[i][j] === ' ') {
+                    tabuleiro[i][j] = 'X';
+                    let aval = minimax(tabuleiro, profundidade + 1, COMP, alpha, beta);
+                    tabuleiro[i][j] = ' ';
+                    minEval = Math.min(minEval, aval);
+                    beta = Math.min(beta, aval);
                     if (beta <= alpha) {
                         break;
                     }
@@ -145,38 +145,38 @@ function minimax(board, depth, player, alpha, beta) {
     }
 }
 
-function playMachine() {
+function jogadaMaquina() {
     let bestScore = -Infinity;
     let move;
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (board[i][j] === ' ') {
-                board[i][j] = 'O';
-                let score = minimax(board, 0, HUMAN, -Infinity, Infinity);
-                board[i][j] = ' ';
-                if (score > bestScore) {
-                    bestScore = score;
+            if (tabuleiro[i][j] === ' ') {
+                tabuleiro[i][j] = 'O';
+                let pontuacao = minimax(tabuleiro, 0, HUMANO, -Infinity, Infinity);
+                tabuleiro[i][j] = ' ';
+                if (pontuacao > bestScore) {
+                    bestScore = pontuacao;
                     move = { i, j };
                 }
             }
         }
     }
-    board[move.i][move.j] = 'O';
+    tabuleiro[move.i][move.j] = 'O';
 
-    if (checkWinner()) {
-        printBoard();
-        console.log(`Player ${currentPlayer} wins!`);
+    if (checarVencedor()) {
+        imprimirTabuleiro();
+        console.log(`Jogador ${currentPlayer} ganha!`);
         rl.close();
-    } else if (isBoardFull()) {
-        printBoard();
-        console.log('It\'s a tie!');
+    } else if (isTabuleiroCheio()) {
+        imprimirTabuleiro();
+        console.log('É um empate');
         rl.close();
     } else {
-        switchPlayer();
-        playHuman();
+        trocarJogador();
+        jogadaHumano();
     }
 }
 
-playHuman();
+jogadaHumano();
 
-module.exports = { playHuman }
+module.exports = { jogadaHumano }
