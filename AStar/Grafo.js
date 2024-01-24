@@ -157,7 +157,6 @@ class Grafo {
   }
 
   aStar(grafo, origem, destino) {
-    const dist = new Array(this.getNumVertices()).fill(Number.MAX_SAFE_INTEGER);
     const pai = new Array(this.getNumVertices()).fill(null);
     const fScore = new Array(this.getNumVertices()).fill(Number.MAX_SAFE_INTEGER);
     const gScore = new Array(this.getNumVertices()).fill(Number.MAX_SAFE_INTEGER);
