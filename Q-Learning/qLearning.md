@@ -18,15 +18,6 @@ O robô recebe recompensas positivas ao coletar uma peça de montagem. Recompens
 #### Objetivo Final:
 
 O objetivo final é que o robô aprenda uma política de ação ótima (estratégia) para percorrer eficientemente a fábrica, coletando todas as peças de montagem necessárias para montar um carro completo.
-#### Implementação do Q-learning:
-
-Os estados do Q-learning correspondem às diferentes localizações na fábrica.
-As ações do Q-learning incluem os movimentos do robô e a ação de coletar uma peça.
-A tabela Q é atualizada com base nas recompensas e penalidades obtidas durante o treinamento.
-Desafios:
-
-O robô precisa equilibrar a exploração de novas áreas para encontrar peças desconhecidas e a exploração de áreas conhecidas para otimizar a rota.
-A dinâmica da fábrica, como obstáculos móveis ou alterações na disposição das peças, pode adicionar complexidade à tarefa.
 
 ## Modelagem Escolhida 
 Baseia-se na definição de constantes como o locationToState que são os locais que apoiarão na definiçao dos estados, das ações (actions) e matriz de recompensas (rewards).
@@ -63,6 +54,13 @@ const rewards = math.matrix([
 
 ~~~
 ## Implementação do Algoritmo Q-Learning
+Os estados do Q-learning correspondem às diferentes localizações na fábrica.
+As ações do Q-learning incluem os movimentos do robô e a ação de coletar uma peça.
+A tabela Q é atualizada com base nas recompensas e penalidades obtidas durante o treinamento.
+Desafios:
+
+O robô precisa equilibrar a exploração de novas áreas para encontrar peças desconhecidas e a exploração de áreas conhecidas para otimizar a rota.
+A dinâmica da fábrica, como obstáculos móveis ou alterações na disposição das peças, pode adicionar complexidade à tarefa.
 
 #### Bellman Equation:
 A equação de Bellman é uma equação fundamental na teoria de controle ótimo e aprendizado por reforço. No contexto do Q-learning e de processos de decisão de Markov (MDPs), a equação de Bellman expressa a relação entre o valor de um estado ou ação e os valores dos estados ou ações subsequentes.
