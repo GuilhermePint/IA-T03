@@ -155,7 +155,7 @@ console.log(getOptimalRoute('L1', 'L9'));
 ~~~
 ## Casos de Teste, Complexidade do Algoritmo e Discussão
 ### Casos de Teste
-### Complexidade do Algoritmo
+### Complexidade do Algoritmo e discussão
 Número de Iterações (épocas) de Treinamento:
 
 O algoritmo Q-learning envolve um processo iterativo de exploração e atualização das Q-values.
@@ -164,7 +164,7 @@ A complexidade é linear em relação ao número de iterações, portanto, O(E),
 Número de Estados e Ações:
 
 A complexidade também é afetada pelo número de estados e ações no ambiente.
-No seu exemplo, você tem 9 estados e 9 ações, resultando em uma matriz Q de tamanho 9x9.
+No exemplo, temos 9 estados e 9 ações, resultando em uma matriz Q de tamanho 9x9.
 A atualização da matriz Q envolve operações que dependem do número de estados e ações, resultando em O(S * A), onde S é o número de estados e A é o número de ações.
 Número de Ações Executáveis em um Estado:
 
@@ -174,4 +174,4 @@ O uso de técnicas de exploração mais sofisticadas pode impactar a complexidad
 Outros Fatores:
 
 Fatores como o tamanho da tabela Q, escolha de hiperparâmetros (taxa de aprendizado, fator de desconto), entre outros, podem influenciar a complexidade.
-Portanto, a complexidade total do algoritmo Q-learning pode ser expressa como a soma das complexidades das operações relevantes, e é comumente expressa em termos de O(E * (S * A) + N*M), onde E é o número de iterações de treinamento, S é o número de estados e A é o número de ações e N e M são as dimensões da matriz usada.
+Portanto, a complexidade total do algoritmo Q-learning pode ser expressa como a soma das complexidades das operações relevantes, e é comumente expressa em termos de O(E * (S * A) + N*M), onde E é o número de iterações de treinamento, S é o número de estados, A é o número de ações e N e M são as dimensões da matriz usada.
