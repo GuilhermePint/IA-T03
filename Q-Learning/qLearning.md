@@ -29,7 +29,7 @@ O robô precisa equilibrar a exploração de novas áreas para encontrar peças 
 A dinâmica da fábrica, como obstáculos móveis ou alterações na disposição das peças, pode adicionar complexidade à tarefa.
 
 ## Modelagem Escolhida 
-Baseia-se na definição de constantes como o locationToState que são os locais que apoiarão na definiçao dos estados, das ações e matriz de recompensas.
+Baseia-se na definição de constantes como o locationToState que são os locais que apoiarão na definiçao dos estados, das ações (actions) e matriz de recompensas (rewards).
 ~~~
 const gamma = 0.75; // fator de desconto
 const alpha = 0.9;
@@ -63,6 +63,24 @@ const rewards = math.matrix([
 
 ~~~
 ## Implementação do Algoritmo Q-Learning
+
+#### Bellman Equation:
+A equação de Bellman é uma equação fundamental na teoria de controle ótimo e aprendizado por reforço. No contexto do Q-learning e de processos de decisão de Markov (MDPs), a equação de Bellman expressa a relação entre o valor de um estado ou ação e os valores dos estados ou ações subsequentes.
+
+No caso do Q-learning, a equação de Bellman é usada para atualizar os valores Q, que representam a qualidade de uma ação em um determinado estado. 
+
+Q(s, a) = R(s, a) + γ * maxₐ' Q(s', a')
+
+Onde:
+
+Q(s, a) é o valor Q para o estado s e a ação a.
+R(s, a) é a recompensa imediata para realizar a ação a no estado s.
+γ é o fator de desconto, que determina a importância das recompensas futuras.
+s' é o próximo estado após a realização da ação a.
+a' é a próxima ação escolhida no próximo estado s'.
+
+De maneira análoga ao pseudocodigo apresentado:
+![Algoritmo Q-Learning][q-learning.png]
 ~~~
 const math = require('mathjs');
 
@@ -155,6 +173,29 @@ console.log(getOptimalRoute('L1', 'L9'));
 ~~~
 ## Casos de Teste, Complexidade do Algoritmo e Discussão
 ### Casos de Teste
+#### Casos Básicos:
+
+Entrada: getOptimalRoute('L9', 'L1')
+Saída:['L9', 'L8', 'L5', 'L2', 'L1']
+
+Entrada: getOptimalRoute('L1', 'L9')
+Saída: Uma rota ótima que pode ser impressa no console.
+
+Outra Rota:
+Entrada: getOptimalRoute('L2', 'L6')
+Saída: Uma rota ótima diferente da anterior, impressa no console.
+
+#### Locais Não Conectados:
+Entrada: getOptimalRoute('L3', 'L7')
+Saída: Os locais não estão conectados.
+
+#### Mesmo Local de Início e Fim:
+Entrada: getOptimalRoute('L4', 'L4')
+Saída: Deve retornar uma rota que consiste apenas no local de início.
+
+#### Locais Inexistentes:
+Entrada: getOptimalRoute('L10', 'L12')
+Saída: Os locais especificados não existem.
 ### Complexidade do Algoritmo e discussão
 Número de Iterações (épocas) de Treinamento:
 
@@ -175,3 +216,7 @@ Outros Fatores:
 
 Fatores como o tamanho da tabela Q, escolha de hiperparâmetros (taxa de aprendizado, fator de desconto), entre outros, podem influenciar a complexidade.
 Portanto, a complexidade total do algoritmo Q-learning pode ser expressa como a soma das complexidades das operações relevantes, e é comumente expressa em termos de O(E * (S * A) + N*M), onde E é o número de iterações de treinamento, S é o número de estados, A é o número de ações e N e M são as dimensões da matriz usada.
+
+
+
+[def]: image.png
