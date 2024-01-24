@@ -3,7 +3,7 @@
 Criação de uma inteligência artificial para o Jogo da Velha. Nós, humanos, temos a prioridade e começamos primeiro, com 'X', enquanto o computador jogará em seguida, com 'O'. Nesse caso, estamos falando de um jogo de dois jogadores e soma zero. São uma categoria específica de jogos nos quais dois participantes estão em competição direta, e o ganho de um jogador é exatamente compensado pela perda do outro. Em outras palavras, a soma total dos ganhos e perdas é sempre zero. 
 
 ## Modelagem Escolhida
-Implementamos um jogo da velha simples, que é jogado selecionando-se o quadrado que o 'X' ou 'O' será colocado, através de um número de 1 a 0, sendo 1 o primeiro quadrado e 9 o último. 
+Implementamos um jogo da velha simples, que é jogado selecionando-se o quadrado que o 'X' ou 'O' será colocado, através de um número de 1 a 9, sendo 1 o primeiro quadrado e 9 o último. 
 Usamos o algoritmo Alpha-Beta-Minimax Search para que o computador encontre sempre a melhor jogada, em nossa implementaçãp, não é possível que a máquina seja vencida (nós não conseguimos) só é possível perder ou empatar (dar velha), como a árvore de jogo é pequena, com apenas 362,880 folhas (5,478 estados distintos) o jogo da velha é consideravelmente pequeno.
 Segue abaixo a implementação de nosso jogo da velha.
 
